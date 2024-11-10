@@ -1,0 +1,13 @@
+{% extends "base.html" %} {% block content %}
+<h2>{{ course.title }}</h2>
+<p>{{ course.description }}</p>
+<h3>Course Content</h3>
+{% for video in course.videos %}
+<video width="640" height="480" controls>
+  <source
+    src="{{ url_for('static', filename='videos/' + video) }}"
+    type="video/mp4"
+  />
+  Your browser does not support the video tag.
+</video>
+{% endfor %} {% endblock %}
