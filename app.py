@@ -18,7 +18,7 @@ def signup():
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
     if request.method == 'POST':
-        # Handle sign in logic here blah blah blah
+        # Handle sign in logic
         session['user'] = request.form['username']
         return redirect(url_for('courses'))
     return render_template('signin.html')
