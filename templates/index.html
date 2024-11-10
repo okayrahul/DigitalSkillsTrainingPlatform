@@ -1,17 +1,43 @@
 {% extends "base.html" %} {% block content %}
-<header>
-  <h1>Welcome to the NGO Digital Skills Platform</h1>
+<!-- Navbar Section -->
+<div class="navbar">
+  <span style="font-weight: bold; font-size: 1.5em">UDAAN</span>
   <nav>
     <a href="{{ url_for('index') }}">Home</a>
-    <a href="{{ url_for('signin') }}">Sign In</a>
+    <a href="#team">The Team</a>
+    <a href="#contact">Contact Us</a>
     <a href="{{ url_for('signup') }}">Sign Up</a>
   </nav>
-</header>
-<main>
-  <section>
-    <h2>Empower Yourself with Digital Skills</h2>
-    <p>Join our community and start learning today!</p>
+</div>
+
+<!-- Main Landing Content -->
+<div id="landing-content">
+  <header>
+    <h1>Welcome to UDAAN</h1>
+    <p>
+      Empower yourself with digital skills. Join our community and start
+      learning today!
+    </p>
     <a href="{{ url_for('courses') }}" class="button">Browse Courses</a>
-  </section>
-</main>
+  </header>
+</div>
+
+<!-- "The Team" Section -->
+<section id="team">
+  <h2>Meet The Team</h2>
+  <p>Our dedicated team is here to support you in your learning journey.</p>
+</section>
+
+<!-- "Contact Us" Section -->
+<section id="contact">
+  <h2>Contact Us</h2>
+  <p>
+    If you have any questions, feel free to reach out to us at
+    <a
+      href="mailto:contact@udaan.org"
+      style="color: #ffffff; text-decoration: underline"
+      >contact@udaan.org</a
+    >.
+  </p>
+</section>
 {% endblock %}
