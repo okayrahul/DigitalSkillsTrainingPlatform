@@ -5,7 +5,7 @@ app.secret_key = 'your_secret_key'
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('landing_pg.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
