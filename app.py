@@ -32,9 +32,9 @@ def signout():
 def courses():
     if 'user' in session:
         courses_list = [
-            {'id': 1, 'title': 'Introduction to Python', 'description': 'Learn the basics of Python.'},
-            {'id': 2, 'title': 'Web Development with Flask', 'description': 'Build web applications using Flask.'},
-            {'id': 3, 'title': 'Data Analysis with Pandas', 'description': 'Analyze data with Python Pandas library.'}
+            {'id': 1, 'title': 'Introduction to Python', 'description': 'Learn the basics of Python'},
+            {'id': 2, 'title': 'Web Development with Flask', 'description': 'Build web applications using Flask'},
+            {'id': 3, 'title': 'Data Analysis with Pandas', 'description': 'Analyze data with Python Pandas library'}
         ]
         return render_template('courses.html', courses=courses_list)
     else:
