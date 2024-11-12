@@ -1,36 +1,41 @@
-/* Full-screen gradient background */
+/* Base styling */
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #6a11cb, #c3d6f6);
-    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+    background-color: #F7F7F9;
+    color: #222123;
 }
-
-/* Flexbox for centering main content */
-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 /* Navbar styles */
 .navbar {
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.1); /* Transparent white for the navbar */
-    padding: 15px;
+    background-color: #222123;
+    padding: 15px 30px; /* Control spacing from the edges */
     position: fixed;
     top: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Space between UDAAN and links */
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Left-aligned UDAAN logo/text */
+.navbar span {
+    font-weight: bold;
+    font-size: 1.5em;
+    color: #FFFFFF;
+}
+
+/* Right-aligned navigation links */
+.navbar nav {
+    display: flex;
+    margin-right: 50px;
+}
+
 .navbar a {
-    color: #ffffff;
-    margin: 0 15px;
+    color: #FFFFFF;
+    margin-left: 15px; /* Space between links */
     text-decoration: none;
     font-weight: bold;
 }
@@ -39,31 +44,52 @@ body {
     color: #d9d9d9;
 }
 
-/* Landing page main content */
-#landing-content {
-    text-align: center;
-    color: #ffffff;
-    max-width: 600px;
-    margin-top: 80px; /* Adjusted to avoid overlap with fixed navbar */
-    padding: 20px;
+
+/* Main Section */
+#main-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    max-width: 1200px;
+    margin: 100px auto; /* Avoid navbar overlap */
 }
 
-h1 {
+.main-content {
+    flex: 1;
+    text-align: left;
+    margin-right: 20px;
+}
+
+.main-content h1 {
     font-size: 2.5em;
+    color: #222123;
     margin-bottom: 10px;
 }
 
-p {
+.main-content p {
     font-size: 1.2em;
+    color: #555555;
     margin-bottom: 20px;
+}
+
+.main-image {
+    flex: 1;
+    text-align: center;
+}
+
+.main-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
 }
 
 /* Button style */
 .button {
     display: inline-block;
     padding: 12px 25px;
-    background-color: #ffffff;
-    color: #2575fc;
+    background-color: #26B67C;
+    color: #FFFFFF;
     font-weight: bold;
     text-decoration: none;
     border-radius: 5px;
@@ -71,174 +97,90 @@ p {
 }
 
 .button:hover {
-    background-color: #f0f0f0;
+    background-color: #22a06b;
 }
 
-/* Additional sections ("The Team" and "Contact Us") */
-section {
-    padding: 40px 20px;
+/* Course Categories Section */
+#course-categories {
     text-align: center;
-    color: #ffffff;
+    padding: 40px 20px;
+    background-color: #FFFFFF;
+    margin-top: 40px;
+    border-radius: 10px;
 }
 
-#team, #contact {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-#team h2, #contact h2 {
+#course-categories h2 {
     font-size: 2em;
+    color: #222123;
     margin-bottom: 15px;
 }
 
-#team p, #contact p {
-    font-size: 1.1em;
-    line-height: 1.6;
-}
-
-
-                                                                            /* sign up and signin page */
-
-/* Center the auth container */
-.auth-container {
+.categories {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
 }
 
-/* Auth Box Style */
-.auth-box {
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 400px;
-    width: 100%;
-}
-
-/* Form Header */
-.auth-box h2 {
-    color: #333333;
-    margin-bottom: 20px;
-}
-
-/* Form Labels and Inputs */
-.auth-box label {
-    display: block;
-    text-align: left;
-    font-weight: bold;
-    color: #333333;
-    margin-top: 15px;
-    margin-bottom: 5px;
-}
-
-
-.auth-box input[type="Name"],
-.auth-box input[type="text"],
-.auth-box input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #cccccc;
+.category {
+    background-color: #26B67C;
+    color: #FFFFFF;
+    padding: 10px 20px;
     border-radius: 5px;
-    box-sizing: border-box;
-}
-
-/* Button Style */
-.auth-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #2575fc;
-    color: #ffffff;
     font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.auth-button:hover {
-    background-color: #1a5bb8;
-}
-
-/* Switch Auth Link */
-.switch-auth {
-    margin-top: 15px;
-    color: #666666;
-}
-
-.switch-auth a {
-    color: #2575fc;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.switch-auth a:hover {
-    text-decoration: underline;
-}
-
-
-
-                                            /* Course Catalog Container */
-                                            
-
-/* Container for the course catalog */
-.course-catalog-container {
     text-align: center;
-    padding-top: 100px; /* Adjust for the fixed navbar */
-    color: #ffffff;
 }
 
-.course-catalog-container h2 {
-    font-size: 2.5em;
-    margin-bottom: 40px;
-    color: #ffffff;
-}
-
-/* Course grid layout */
-.course-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 50px;
-    padding: 20px;
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-/* Course card styling */
-.course-card {
-    background-color: #ffffff;
-    padding: 20px;
+/* Meet the Team Section */
+#meet-the-team {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #F7F7F9;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s, box-shadow 0.2s;
-    color: #333333;
-    text-align: left;
+    margin-top: 40px;
 }
 
-/* Course title link styling */
-.course-card h3 a {
-    color: #2575fc;
+#meet-the-team h2 {
+    font-size: 2em;
+    color: #222123;
+    margin-bottom: 15px;
+}
+
+.team-members {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.team-member {
+    text-align: center;
+}
+
+.team-member img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #222123;
+    color: #FFFFFF;
+    margin-top: 40px;
+    font-size: 0.9em;
+}
+
+footer a {
+    color: #26B67C;
     text-decoration: none;
-    font-size: 1.5em;
+    margin: 0 10px;
 }
 
-.course-card h3 a:hover {
-    color: #6a11cb;
+footer a:hover {
     text-decoration: underline;
-}
-
-/* Description styling */
-.course-card p {
-    font-size: 1em;
-    color: #555555;
-    line-height: 1;
-}
-
-/* Hover effect for course cards */
-.course-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }

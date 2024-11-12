@@ -1,0 +1,7 @@
+{% extends "base.html" %} {% block content %}
+<div class="profile-content">
+  <h2>Welcome, {{ username }}!</h2>
+  <p>Manage your account settings here.</p>
+  <a href="{{ url_for('signout') }}" class="button">Sign Out</a>
+</div>
+{% endblock %}

@@ -1,43 +1,67 @@
 {% extends "base.html" %} {% block content %}
-<!-- Navbar Section -->
-<div class="navbar">
-  <span style="font-weight: bold; font-size: 1.5em">UDAAN</span>
-  <nav>
-    <a href="{{ url_for('index') }}">Home</a>
-    <a href="#team">The Team</a>
-    <a href="#contact">Contact Us</a>
-    <a href="{{ url_for('signup') }}">Sign Up</a>
-  </nav>
-</div>
 
-<!-- Main Landing Content -->
-<div id="landing-content">
-  <header>
+<!-- Main Section with Welcome Message and Image -->
+<section id="main-section">
+  <div class="main-content">
     <h1>Welcome to UDAAN</h1>
     <p>
       Empower yourself with digital skills. Join our community and start
       learning today!
     </p>
     <a href="{{ url_for('courses') }}" class="button">Browse Courses</a>
-  </header>
-</div>
+  </div>
+  <div class="main-image">
+    <img
+      src="{{ url_for('static', filename='images/placeholder.jpg') }}"
+      alt="Placeholder Image"
+    />
+  </div>
+</section>
 
-<!-- "The Team" Section -->
-<section id="team">
+<!-- Course Categories Section -->
+<section id="course-categories">
+  <h2>Explore Course Categories</h2>
+  <p>
+    We offer a wide range of courses to help you acquire new skills. Start
+    exploring now!
+  </p>
+  <div class="categories">
+    <div class="category">Programming</div>
+    <div class="category">Web Development</div>
+    <div class="category">Data Science</div>
+    <div class="category">Digital Marketing</div>
+  </div>
+</section>
+
+<!-- Meet the Team Section -->
+<section id="meet-the-team">
   <h2>Meet The Team</h2>
   <p>Our dedicated team is here to support you in your learning journey.</p>
+  <!-- Placeholder for team members -->
+  <div class="team-members">
+    <div class="team-member">
+      <img
+        src="{{ url_for('static', filename='images/team1.jpg') }}"
+        alt="Team Member 1"
+      />
+      <p>John Doe - Instructor</p>
+    </div>
+    <div class="team-member">
+      <img
+        src="{{ url_for('static', filename='images/team2.jpg') }}"
+        alt="Team Member 2"
+      />
+      <p>Jane Smith - Curriculum Developer</p>
+    </div>
+  </div>
 </section>
 
-<!-- "Contact Us" Section -->
-<section id="contact">
-  <h2>Contact Us</h2>
-  <p>
-    If you have any questions, feel free to reach out to us at
-    <a
-      href="mailto:contact@udaan.org"
-      style="color: #ffffff; text-decoration: underline"
-      >contact@udaan.org</a
-    >.
-  </p>
-</section>
+<!-- Footer Section -->
+<footer>
+  <p>&copy; 2024 UDAAN | Empowering through Digital Skills</p>
+  <a href="#contact">Contact Us</a> |
+  <a href="#privacy-policy">Privacy Policy</a> |
+  <a href="#terms-of-service">Terms of Service</a>
+</footer>
+
 {% endblock %}

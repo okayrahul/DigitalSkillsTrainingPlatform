@@ -18,8 +18,7 @@ def signup():
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
     if request.method == 'POST':
-        # Handle sign in logic
-        session['user'] = request.form['username']
+        session['user'] = request.form['username']  # Only set user in session on successful login
         return redirect(url_for('courses'))
     return render_template('signin.html')
 
@@ -49,6 +48,19 @@ def course_detail(course_id):
     }
     return render_template('course_detail.html', course=course_content)
 
+@app.route('/profile')
+def profile():
+    if 'user' in session:
+        # Display user profile information
+        return render_template('profile.html', username=session['user'])
+    else:
+        return redirect(url_for('signin'))
+
+
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
-# MONLEYSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+
