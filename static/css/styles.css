@@ -178,3 +178,67 @@ section {
 .switch-auth a:hover {
     text-decoration: underline;
 }
+
+
+
+                                            /* Course Catalog Container */
+                                            
+
+/* Container for the course catalog */
+.course-catalog-container {
+    text-align: center;
+    padding-top: 100px; /* Adjust for the fixed navbar */
+    color: #ffffff;
+}
+
+.course-catalog-container h2 {
+    font-size: 2.5em;
+    margin-bottom: 40px;
+    color: #ffffff;
+}
+
+/* Course grid layout */
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 50px;
+    padding: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Course card styling */
+.course-card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    color: #333333;
+    text-align: left;
+}
+
+/* Course title link styling */
+.course-card h3 a {
+    color: #2575fc;
+    text-decoration: none;
+    font-size: 1.5em;
+}
+
+.course-card h3 a:hover {
+    color: #6a11cb;
+    text-decoration: underline;
+}
+
+/* Description styling */
+.course-card p {
+    font-size: 1em;
+    color: #555555;
+    line-height: 1;
+}
+
+/* Hover effect for course cards */
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
