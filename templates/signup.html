@@ -15,6 +15,12 @@
             <label for="password">Password:</label>
             <input type="password" name="password" id="password" required>
 
+            <label for="role">Role:</label>
+            <select name="role" id="role" required>
+                <option value="student">Student</option>
+                <option value="instructor">Instructor</option>
+            </select>
+
             <button type="submit" class="auth-button">Sign Up</button>
         </form>
         <p class="switch-auth">Already have an account? <a href="{{ url_for('signin') }}">Sign In</a></p>
