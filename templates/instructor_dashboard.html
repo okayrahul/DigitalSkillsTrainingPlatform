@@ -1,0 +1,60 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1>Welcome, {{ session['name'] }}</h1>
+    
+    <div class="dashboard-section">
+        <h2>Your Classes</h2>
+        <button class="button" onclick="showAddStudentModal()">Add New Student</button>
+        
+        <div class="student-list">
+            <h3>Current Students</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Attendance</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.username }}</td>
+                        <td>{{ student.attendance }}%</td>
+                        <td>
+                            <button onclick="markAttendance('{{ student.username }}')">Mark Attendance</button>
+                            <button onclick="removeStudent('{{ student.username }}')">Remove</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Student Modal -->
+<div id="addStudentModal" class="modal">
+    <div class="modal-content">
+        <h3>Add New Student</h3>
+        <form id="addStudentForm" method="post" action="{{ url_for('add_student') }}">
+            <label for="studentName">Student Name:</label>
+            <input type="text" id="studentName" name="name" required>
+            
+            <label for="studentUsername">Username:</label>
+            <input type="text" id="studentUsername" name="username" required>
+            
+            <label for="studentPassword">Password:</label>
+            <input type="password" id="studentPassword" name="password" required>
+            
+            <button type="submit">Add Student</button>
+            <button type="button" onclick="closeModal()">Cancel</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
