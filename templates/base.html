@@ -19,13 +19,21 @@
     <div class="navbar">
       <span style="font-weight: bold; font-size: 1.5em">UDAAN</span>
       <nav>
-        <a href="{{ url_for('index') }}">Home</a>
+        {% if 'user' in session %}
+          {% if session['role'] == 'student' %}
+            <a href="{{ url_for('student_dashboard') }}">Home</a>
+          {% elif session['role'] == 'instructor' %}
+            <a href="{{ url_for('instructor_dashboard') }}">Home</a>
+          {% endif %}
+        {% else %}
+          <a href="{{ url_for('index') }}">Home</a>
+        {% endif %}
         <a href="#team">The Team</a>
         <a href="#contact">Contact Us</a>
         {% if 'user' in session %}
-        <a href="{{ url_for('profile') }}">Profile</a>
+          <a href="{{ url_for('profile') }}">Profile</a>
         {% else %}
-        <a href="{{ url_for('signup') }}">Sign Up</a>
+          <a href="{{ url_for('signup') }}">Sign Up</a>
         {% endif %}
       </nav>
     </div>
