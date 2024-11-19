@@ -7,6 +7,7 @@ html, body {
     background-color: #F7F7F9;
     color: #222123;
 }
+
 /* Navbar styles */
 .navbar {
     width: 100%;
@@ -18,6 +19,7 @@ html, body {
     justify-content: space-between; /* Space between UDAAN and links */
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Ensure navbar stays above other elements */
 }
 
 /* Left-aligned UDAAN logo/text */
@@ -43,7 +45,6 @@ html, body {
 .navbar a:hover {
     color: #d9d9d9;
 }
-
 
 /* Main Section */
 #main-section {
@@ -152,6 +153,7 @@ html, body {
     justify-content: center;
     gap: 30px;
     margin-top: 20px;
+    flex-wrap: wrap;
 }
 
 .team-member {
@@ -185,18 +187,16 @@ footer a:hover {
     text-decoration: underline;
 }
 
-
-
 /* Sign Up and Sign In Page */
 .auth-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: calc(100vh - 70px); /* Adjust for the fixed navbar */
     background-color: #F7F7F9; /* Matches the base background color */
+    padding-top: 70px; /* Adjust for navbar */
 }
 
-/* Auth Box Style */
 .auth-box {
     background-color: #ffffff;
     padding: 40px;
@@ -223,7 +223,7 @@ footer a:hover {
     margin-bottom: 5px;
 }
 
-.auth-box input[type="Name"],
+.auth-box input[type="name"],
 .auth-box input[type="text"],
 .auth-box input[type="password"] {
     width: 100%;
@@ -267,13 +267,6 @@ footer a:hover {
     border-color: #26B67C;
 }
 
-/* Style the dropdown options */
-.auth-box select option {
-    padding: 10px;
-    background-color: #ffffff;
-    color: #222123;
-}
-
 /* Button Style */
 .auth-button {
     width: 100%;
@@ -307,19 +300,14 @@ footer a:hover {
     text-decoration: underline;
 }
 
-
-/* Container for the Course Catalog - Course Page */
-
+/* Course Catalog Container */
 .course-catalog-container {
     text-align: center;
     padding-top: 100px; /* Adjust for the fixed navbar */
     color: #222123;
     background-color: #F7F7F9; /* Matches the background color of the main sections */
     padding-bottom: 40px; /* Extra padding at the bottom */
-    
 }
-
-
 
 .course-catalog-container h2 {
     font-size: 2.5em;
@@ -376,4 +364,275 @@ footer a:hover {
 .course-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Flash Messages */
+.flash-messages {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.flash-message {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.flash-message.success {
+    background-color: #4CAF50;
+}
+
+.flash-message.error {
+    background-color: #f44336;
+}
+
+/* Form Container */
+.form-container {
+    max-width: 600px;
+    margin: 100px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+}
+
+.form-container h2 {
+    margin-bottom: 20px;
+    color: #222123;
+}
+
+.form-container label {
+    display: block;
+    margin-bottom: 8px;
+    color: #222123;
+    font-weight: bold;
+}
+
+.form-container input[type="text"],
+.form-container textarea,
+.form-container select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.form-container textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-container .button {
+    width: 100%;
+}
+
+/* Content Container */
+.content-container {
+    max-width: 800px;
+    margin: 100px auto;
+    padding: 20px;
+    color: #222123;
+}
+
+.content-container h2 {
+    margin-bottom: 20px;
+}
+
+.content-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.content-container table, th, td {
+    border: 1px solid #cccccc;
+}
+
+.content-container th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+.content-container th {
+    background-color: #f2f2f2;
+}
+
+/* Dashboard */
+.dashboard-container {
+    max-width: 1000px;
+    margin: 100px auto;
+    padding: 20px;
+}
+
+.dashboard-container h1 {
+    margin-bottom: 30px;
+}
+
+.dashboard-actions {
+    margin-bottom: 20px;
+}
+
+.dashboard-actions .button {
+    margin-right: 10px;
+}
+
+/* Buttons inside forms */
+form button {
+    background: none;
+    border: none;
+    color: #26B67C;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 0;
+}
+
+form button:hover {
+    text-decoration: underline;
+}
+
+/* Adjustments for fixed navbar */
+body {
+    padding-top: 70px; /* Height of the navbar */
+}
+
+/* Profile Page */
+.profile-content {
+    max-width: 600px;
+    margin: 100px auto;
+    text-align: center;
+    padding: 20px;
+}
+
+.profile-content h2 {
+    margin-bottom: 20px;
+}
+
+.profile-content p {
+    margin-bottom: 30px;
+}
+
+/* Video Content */
+video {
+    display: block;
+    margin: 20px auto;
+    max-width: 100%;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+}
+
+/* Attendance Form */
+.form-container div {
+    margin-bottom: 15px;
+}
+
+.form-container div label {
+    display: inline-block;
+    width: 200px;
+}
+
+.form-container div select {
+    width: calc(100% - 210px);
+    display: inline-block;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #cccccc;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
+    /* Navbar */
+    .navbar nav {
+        display: none;
+    }
+
+    .navbar .menu-toggle {
+        display: block;
+        cursor: pointer;
+        color: #FFFFFF;
+    }
+
+    /* Main Section */
+    #main-section {
+        flex-direction: column;
+    }
+
+    .main-content {
+        margin-right: 0;
+        text-align: center;
+    }
+
+    /* Team Members */
+    .team-members {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Course Grid */
+    .course-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Auth Container */
+    .auth-container {
+        padding-top: 100px;
+    }
+
+    /* Dashboard */
+    .dashboard-container {
+        margin: 80px auto;
+        padding: 10px;
+    }
+
+    /* Content Container */
+    .content-container {
+        margin: 80px auto;
+        padding: 10px;
+    }
+}
+
+/* Add this to your styles.css */
+
+/* Dashboard Actions */
+.dashboard-actions {
+    margin-bottom: 20px;
+}
+
+.dashboard-actions .button {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+/* Course Catalog */
+.course-catalog-container {
+    padding-top: 100px; /* Adjust for fixed navbar */
+}
+
+/* Course Card */
+.course-card form {
+    margin-top: 15px;
+}
+
+.course-card .button {
+    width: 100%;
+    text-align: center;
 }

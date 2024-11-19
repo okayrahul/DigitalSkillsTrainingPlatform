@@ -1,18 +1,24 @@
-
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="dashboard-container">
-    <h1>Welcome, {{ session['name'] }}</h1>
+  <h1>Welcome, {{ session['name'] }}</h1>
 
-    <div class="dashboard-box">
-        <h2>My Courses</h2>
-        <ul>
-            {% for course in courses %}
-            <li>{{ course['name'] }}</li>
-            {% endfor %}
-        </ul>
-    </div>
+  <div class="dashboard-actions">
+    <a href="{{ url_for('courses') }}" class="button"
+      >Browse Available Courses</a
+    >
+  </div>
 
+  <div class="dashboard-box">
+    <h2>My Courses</h2>
+    {% if courses %}
+    <ul>
+      {% for course in courses %}
+      <li>{{ course['title'] }}</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>You are not enrolled in any courses yet.</p>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}

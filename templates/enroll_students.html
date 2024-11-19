@@ -1,0 +1,14 @@
+{% extends "base.html" %} {% block content %}
+<div class="form-container">
+  <h2>Enroll Student</h2>
+  <form
+    method="post"
+    action="{{ url_for('enroll_student', course_id=course_id) }}"
+  >
+    <label for="student_username">Student Username:</label>
+    <input type="text" name="student_username" id="student_username" required />
+
+    <button type="submit" class="button">Enroll</button>
+  </form>
+</div>
+{% endblock %}

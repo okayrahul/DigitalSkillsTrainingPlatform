@@ -1,29 +1,28 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="auth-container">
-    <div class="auth-box">
-        <h2>Create an Account</h2>
-        <form method="post" action="{{ url_for('signup') }}">
+  <div class="auth-box">
+    <h2>Create an Account</h2>
+    <form method="post" action="{{ url_for('signup') }}">
+      <label for="name">Name:</label>
+      <input type="text" name="name" id="name" required />
 
-            <label for="name">Name:</label>
-            <input type="name" name="name" id="name" required>
+      <label for="username">Username:</label>
+      <input type="text" name="username" id="username" required />
 
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username" required>
+      <label for="password">Password:</label>
+      <input type="password" name="password" id="password" required />
 
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required>
+      <label for="role">Role:</label>
+      <select name="role" id="role" required>
+        <option value="student">Student</option>
+        <option value="instructor">Instructor</option>
+      </select>
 
-            <label for="role">Role:</label>
-            <select name="role" id="role" required>
-                <option value="student">Student</option>
-                <option value="instructor">Instructor</option>
-            </select>
-
-            <button type="submit" class="auth-button">Sign Up</button>
-        </form>
-        <p class="switch-auth">Already have an account? <a href="{{ url_for('signin') }}">Sign In</a></p>
-    </div>
+      <button type="submit" class="auth-button">Sign Up</button>
+    </form>
+    <p class="switch-auth">
+      Already have an account? <a href="{{ url_for('signin') }}">Sign In</a>
+    </p>
+  </div>
 </div>
 {% endblock %}

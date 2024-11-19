@@ -1,0 +1,14 @@
+{% extends "base.html" %} {% block content %}
+<div class="form-container">
+  <h2>Create New Course</h2>
+  <form method="post" action="{{ url_for('create_course') }}">
+    <label for="title">Course Title:</label>
+    <input type="text" name="title" id="title" required />
+
+    <label for="description">Course Description:</label>
+    <textarea name="description" id="description" required></textarea>
+
+    <button type="submit" class="button">Create Course</button>
+  </form>
+</div>
+{% endblock %}

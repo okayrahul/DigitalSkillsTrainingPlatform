@@ -1,0 +1,20 @@
+{% extends "base.html" %} {% block content %}
+<div class="form-container">
+  <h2>Mark Attendance</h2>
+  <form
+    method="post"
+    action="{{ url_for('mark_attendance', course_id=course_id) }}"
+  >
+    {% for student in students %}
+    <div>
+      <label>{{ student }}</label>
+      <select name="{{ student }}">
+        <option value="Present">Present</option>
+        <option value="Absent">Absent</option>
+      </select>
+    </div>
+    {% endfor %}
+    <button type="submit" class="button">Submit Attendance</button>
+  </form>
+</div>
+{% endblock %}
