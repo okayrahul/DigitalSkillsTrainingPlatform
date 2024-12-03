@@ -12,24 +12,22 @@ html, body {
 .navbar {
     width: 100%;
     background-color: #222123;
-    padding: 15px 30px; /* Control spacing from the edges */
+    padding: 15px 30px;
     position: fixed;
     top: 0;
     display: flex;
-    justify-content: space-between; /* Space between UDAAN and links */
+    justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    z-index: 1000; /* Ensure navbar stays above other elements */
+    z-index: 1000;
 }
 
-/* Left-aligned UDAAN logo/text */
 .navbar span {
     font-weight: bold;
     font-size: 1.5em;
     color: #FFFFFF;
 }
 
-/* Right-aligned navigation links */
 .navbar nav {
     display: flex;
     margin-right: 50px;
@@ -37,333 +35,13 @@ html, body {
 
 .navbar a {
     color: #FFFFFF;
-    margin-left: 15px; /* Space between links */
+    margin-left: 15px;
     text-decoration: none;
     font-weight: bold;
 }
 
 .navbar a:hover {
     color: #d9d9d9;
-}
-
-/* Main Section */
-#main-section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
-    max-width: 1200px;
-    margin: 100px auto; /* Avoid navbar overlap */
-}
-
-.main-content {
-    flex: 1;
-    text-align: left;
-    margin-right: 20px;
-}
-
-.main-content h1 {
-    font-size: 2.5em;
-    color: #222123;
-    margin-bottom: 10px;
-}
-
-.main-content p {
-    font-size: 1.2em;
-    color: #555555;
-    margin-bottom: 20px;
-}
-
-.main-image {
-    flex: 1;
-    text-align: center;
-}
-
-.main-image img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 10px;
-}
-
-/* Button style */
-.button {
-    display: inline-block;
-    padding: 12px 25px;
-    background-color: #26B67C;
-    color: #FFFFFF;
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.button:hover {
-    background-color: #22a06b;
-}
-
-/* Course Categories Section */
-#course-categories {
-    text-align: center;
-    padding: 40px 20px;
-    background-color: #FFFFFF;
-    margin-top: 40px;
-    border-radius: 10px;
-}
-
-#course-categories h2 {
-    font-size: 2em;
-    color: #222123;
-    margin-bottom: 15px;
-}
-
-.categories {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 20px;
-}
-
-.category {
-    background-color: #26B67C;
-    color: #FFFFFF;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-weight: bold;
-    text-align: center;
-}
-
-/* Meet the Team Section */
-#meet-the-team {
-    text-align: center;
-    padding: 40px 20px;
-    background-color: #F7F7F9;
-    border-radius: 10px;
-    margin-top: 40px;
-}
-
-#meet-the-team h2 {
-    font-size: 2em;
-    color: #222123;
-    margin-bottom: 15px;
-}
-
-.team-members {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-}
-
-.team-member {
-    text-align: center;
-}
-
-.team-member img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    margin-bottom: 10px;
-}
-
-/* Footer */
-footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #222123;
-    color: #FFFFFF;
-    margin-top: 40px;
-    font-size: 0.9em;
-}
-
-footer a {
-    color: #26B67C;
-    text-decoration: none;
-    margin: 0 10px;
-}
-
-footer a:hover {
-    text-decoration: underline;
-}
-
-/* Sign Up and Sign In Page */
-.auth-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(100vh - 70px); /* Adjust for the fixed navbar */
-    background-color: #F7F7F9; /* Matches the base background color */
-    padding-top: 70px; /* Adjust for navbar */
-}
-
-.auth-box {
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 400px;
-    width: 100%;
-}
-
-/* Form Header */
-.auth-box h2 {
-    color: #222123; /* Updated to match the site’s main text color */
-    margin-bottom: 20px;
-}
-
-/* Form Labels and Inputs */
-.auth-box label {
-    display: block;
-    text-align: left;
-    font-weight: bold;
-    color: #222123; /* Matches the base text color */
-    margin-top: 15px;
-    margin-bottom: 5px;
-}
-
-.auth-box input[type="name"],
-.auth-box input[type="text"],
-.auth-box input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #cccccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    color: #222123; /* Consistent text color */
-    font-size: 1em;
-}
-
-/* Dropdown styling */
-.auth-box select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #cccccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    color: #222123;
-    font-size: 1em;
-    background-color: #ffffff;
-    cursor: pointer;
-    appearance: none; /* Remove default arrow */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23222123' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 1em;
-}
-
-.auth-box select:focus {
-    outline: none;
-    border-color: #26B67C;
-    box-shadow: 0 0 0 2px rgba(38, 182, 124, 0.1);
-}
-
-.auth-box select:hover {
-    border-color: #26B67C;
-}
-
-/* Button Style */
-.auth-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #26B67C; /* Matches primary button color */
-    color: #ffffff;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.auth-button:hover {
-    background-color: #22a06b; /* Darker shade for hover */
-}
-
-/* Switch Auth Link */
-.switch-auth {
-    margin-top: 15px;
-    color: #666666;
-}
-
-.switch-auth a {
-    color: #26B67C; /* Primary accent color for links */
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.switch-auth a:hover {
-    text-decoration: underline;
-}
-
-/* Course Catalog Container */
-.course-catalog-container {
-    text-align: center;
-    padding-top: 100px; /* Adjust for the fixed navbar */
-    color: #222123;
-    background-color: #F7F7F9; /* Matches the background color of the main sections */
-    padding-bottom: 40px; /* Extra padding at the bottom */
-}
-
-.course-catalog-container h2 {
-    font-size: 2.5em;
-    margin-bottom: 30px;
-    color: #222123;
-}
-
-/* Course grid layout */
-.course-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
-    gap: 60px;
-    padding: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* Course card styling */
-.course-card {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s, box-shadow 0.2s;
-    color: #222123;
-    text-align: left;
-}
-
-/* Course title link styling */
-.course-card h3 {
-    font-size: 1.5em;
-    color: #26B67C; /* Accent color */
-    margin-bottom: 10px;
-}
-
-.course-card h3 a {
-    color: inherit;
-    text-decoration: none;
-}
-
-.course-card h3 a:hover {
-    color: #22a06b; /* Hover shade of accent color */
-    text-decoration: underline;
-}
-
-/* Description styling */
-.course-card p {
-    font-size: 1.1em;
-    color: #555555;
-    line-height: 1.6;
-}
-
-/* Hover effect for course cards */
-.course-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 /* Flash Messages */
@@ -391,7 +69,7 @@ footer a:hover {
 
 /* Form Container */
 .form-container {
-    max-width: 600px;
+    max-width: 800px;
     margin: 100px auto;
     background-color: #ffffff;
     padding: 30px;
@@ -411,8 +89,9 @@ footer a:hover {
 }
 
 .form-container input[type="text"],
-.form-container textarea,
-.form-container select {
+.form-container input[type="date"],
+.form-container select,
+.form-container textarea {
     width: 100%;
     padding: 12px;
     margin-bottom: 20px;
@@ -423,7 +102,7 @@ footer a:hover {
 
 .form-container textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 80px;
 }
 
 .form-container .button {
@@ -432,110 +111,10 @@ footer a:hover {
 
 /* Content Container */
 .content-container {
-    max-width: 800px;
-    margin: 100px auto;
-    padding: 20px;
-    color: #222123;
-}
-
-.content-container h2 {
-    margin-bottom: 20px;
-}
-
-.content-container table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.content-container table, th, td {
-    border: 1px solid #cccccc;
-}
-
-.content-container th, td {
-    padding: 12px;
-    text-align: left;
-}
-
-.content-container th {
-    background-color: #f2f2f2;
-}
-
-/* Dashboard */
-.dashboard-container {
     max-width: 1000px;
     margin: 100px auto;
     padding: 20px;
-}
-
-.dashboard-container h1 {
-    margin-bottom: 30px;
-}
-
-.dashboard-actions {
-    margin-bottom: 20px;
-}
-
-.dashboard-actions .button {
-    margin-right: 10px;
-}
-
-/* Buttons inside forms */
-form button {
-    background: none;
-    border: none;
-    color: #26B67C;
-    cursor: pointer;
-    font-size: 1em;
-    padding: 0;
-}
-
-form button:hover {
-    text-decoration: underline;
-}
-
-/* Adjustments for fixed navbar */
-body {
-    padding-top: 70px; /* Height of the navbar */
-}
-
-/* Profile Page */
-.profile-content {
-    max-width: 600px;
-    margin: 100px auto;
-    text-align: center;
-    padding: 20px;
-}
-
-.profile-content h2 {
-    margin-bottom: 20px;
-}
-
-.profile-content p {
-    margin-bottom: 30px;
-}
-
-/* Video Content */
-video {
-    display: block;
-    margin: 20px auto;
-    max-width: 100%;
-    border: 1px solid #cccccc;
-    border-radius: 5px;
-}
-
-/* Attendance Form */
-.form-container div {
-    margin-bottom: 15px;
-}
-
-.form-container div label {
-    display: inline-block;
-    width: 200px;
-}
-
-.form-container div select {
-    width: calc(100% - 210px);
-    display: inline-block;
+    color: #222123;
 }
 
 /* Tables */
@@ -558,81 +137,94 @@ th {
     background-color: #f2f2f2;
 }
 
-/* Responsive Adjustments */
-@media screen and (max-width: 768px) {
-    /* Navbar */
-    .navbar nav {
-        display: none;
-    }
-
-    .navbar .menu-toggle {
-        display: block;
-        cursor: pointer;
-        color: #FFFFFF;
-    }
-
-    /* Main Section */
-    #main-section {
-        flex-direction: column;
-    }
-
-    .main-content {
-        margin-right: 0;
-        text-align: center;
-    }
-
-    /* Team Members */
-    .team-members {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    /* Course Grid */
-    .course-grid {
-        grid-template-columns: 1fr;
-    }
-
-    /* Auth Container */
-    .auth-container {
-        padding-top: 100px;
-    }
-
-    /* Dashboard */
-    .dashboard-container {
-        margin: 80px auto;
-        padding: 10px;
-    }
-
-    /* Content Container */
-    .content-container {
-        margin: 80px auto;
-        padding: 10px;
-    }
-}
-
-/* Add this to your styles.css */
-
 /* Dashboard Actions */
 .dashboard-actions {
     margin-bottom: 20px;
 }
 
 .dashboard-actions .button {
-    display: inline-block;
     margin-right: 10px;
 }
 
-/* Course Catalog */
-.course-catalog-container {
-    padding-top: 100px; /* Adjust for fixed navbar */
+/* Button style */
+.button {
+    display: inline-block;
+    padding: 12px 25px;
+    background-color: #26B67C;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
-/* Course Card */
-.course-card form {
-    margin-top: 15px;
+.button:hover {
+    background-color: #22a06b;
 }
 
-.course-card .button {
-    width: 100%;
+/* Auth Container */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 70px);
+    background-color: #F7F7F9;
+    padding-top: 70px;
+}
+
+.auth-box {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+.auth-box h2 {
+    color: #222123;
+    margin-bottom: 20px;
+}
+
+.auth-box label {
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    color: #222123;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.auth-box input[type="text"],
+.auth-box input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    color: #222123;
+    font-size: 1em;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #26B67C;
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.auth-button:hover {
+    background-color: #22a06b;
+}
+
+/* Adjustments for fixed navbar */
+body {
+    padding-top: 70px;
 }

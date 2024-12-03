@@ -1,33 +1,34 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import csv
 import os
-from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import uuid
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
 # File paths
 USER_DB = 'users.csv'
-COURSE_DB = 'courses.csv'
-ENROLLMENTS_DB = 'enrollments.csv'
+STUDENT_DB = 'students.csv'
 PROGRESS_DB = 'progress.csv'
 ATTENDANCE_DB = 'attendance.csv'
+MODULE_DB = 'modules.csv'
 
 # Create CSV files if they don't exist
-for db_file, header in [
-    (USER_DB, ['name', 'username', 'password', 'role']),
-    (COURSE_DB, ['course_id', 'instructor_username', 'title', 'description']),
-    (ENROLLMENTS_DB, ['course_id', 'student_username']),
-    (PROGRESS_DB, ['course_id', 'student_username', 'progress_percentage']),
-    (ATTENDANCE_DB, ['course_id', 'session_date', 'student_username', 'status']),
-]:
-    if not os.path.exists(db_file):
-        with open(db_file, 'w', newline='') as f:
+def create_csv_file(file_path, header):
+    if not os.path.exists(file_path):
+        with open(file_path, 'w', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(header)
 
+create_csv_file(USER_DB, ['name', 'username', 'password', 'role'])
+create_csv_file(STUDENT_DB, ['student_id', 'name', 'date_of_birth', 'gender', 'enrollment_date', 'additional_info', 'grade_level'])
+create_csv_file(PROGRESS_DB, ['student_id', 'module_id', 'status', 'last_updated'])
+create_csv_file(ATTENDANCE_DB, ['student_id', 'date', 'status'])
+create_csv_file(MODULE_DB, ['module_id', 'grade_level', 'subject', 'name', 'description', 'order'])
+
+# Helper functions
 def get_user(username):
     with open(USER_DB, 'r', newline='') as f:
         reader = csv.DictReader(f)
@@ -36,400 +37,290 @@ def get_user(username):
                 return user
     return None
 
-def get_instructor_courses(instructor_username):
-    courses = []
-    with open(COURSE_DB, 'r', newline='') as f:
-        reader = csv.DictReader(f)
-        for course in reader:
-            if course['instructor_username'] == instructor_username:
-                courses.append(course)
-    return courses
-
-def get_student_courses(student_username):
-    courses = []
-    with open(ENROLLMENTS_DB, 'r', newline='') as f_enrollments, open(COURSE_DB, 'r', newline='') as f_courses:
-        enrollments = list(csv.DictReader(f_enrollments))
-        all_courses = list(csv.DictReader(f_courses))
-        enrolled_course_ids = [e['course_id'] for e in enrollments if e['student_username'] == student_username]
-
-        for course in all_courses:
-            if course['course_id'] in enrolled_course_ids:
-                courses.append(course)
-    return courses
-
-
-def get_enrolled_students(course_id):
+def get_all_students():
     students = []
-    with open(ENROLLMENTS_DB, 'r', newline='') as f:
+    with open(STUDENT_DB, 'r', newline='') as f:
         reader = csv.DictReader(f)
-        for enrollment in reader:
-            if enrollment['course_id'] == course_id:
-                students.append(enrollment['student_username'])
+        students = list(reader)
     return students
 
-def get_student_progress(course_id):
-    progress_data = []
+def get_student(student_id):
+    with open(STUDENT_DB, 'r', newline='') as f:
+        reader = csv.DictReader(f)
+        for student in reader:
+            if student['student_id'] == student_id:
+                return student
+    return None
+
+def get_all_modules():
+    modules = []
+    with open(MODULE_DB, 'r', newline='') as f:
+        reader = csv.DictReader(f)
+        modules = list(reader)
+    return modules
+
+def get_modules_by_grade(grade_level):
+    modules = []
+    with open(MODULE_DB, 'r', newline='') as f:
+        reader = csv.DictReader(f)
+        for module in reader:
+            if module['grade_level'] == str(grade_level):
+                modules.append(module)
+    return modules
+
+def get_student_progress(student_id):
+    progress = {}
     with open(PROGRESS_DB, 'r', newline='') as f:
         reader = csv.DictReader(f)
-        for progress in reader:
-            if progress['course_id'] == course_id:
-                progress_data.append(progress)
-    return progress_data
+        for record in reader:
+            if record['student_id'] == student_id:
+                progress[record['module_id']] = record['status']
+    return progress
 
-def get_attendance_records(course_id):
-    attendance = []
+def update_progress_record(student_id, module_id, status):
+    records = []
+    found = False
+    if os.path.exists(PROGRESS_DB):
+        with open(PROGRESS_DB, 'r', newline='') as f:
+            reader = csv.DictReader(f)
+            records = list(reader)
+
+    for record in records:
+        if record['student_id'] == student_id and record['module_id'] == module_id:
+            record['status'] = status
+            record['last_updated'] = datetime.now().strftime('%Y-%m-%d')
+            found = True
+            break
+
+    if not found:
+        records.append({
+            'student_id': student_id,
+            'module_id': module_id,
+            'status': status,
+            'last_updated': datetime.now().strftime('%Y-%m-%d')
+        })
+
+    with open(PROGRESS_DB, 'w', newline='') as f:
+        fieldnames = ['student_id', 'module_id', 'status', 'last_updated']
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(records)
+
+def get_attendance_by_date(date):
+    attendance_records = []
     with open(ATTENDANCE_DB, 'r', newline='') as f:
         reader = csv.DictReader(f)
         for record in reader:
-            if record['course_id'] == course_id:
-                attendance.append(record)
-    return attendance
+            if record['date'] == date:
+                attendance_records.append(record)
+    return attendance_records
 
+# Routes
 @app.route('/')
 def index():
-    return render_template('landing_pg.html')
+    return redirect(url_for('login'))
 
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    if request.method == 'POST':
-        name = request.form['name']
-        username = request.form['username']
-        password = request.form['password']
-        role = request.form['role']
-
-        # Check if username already exists
-        if get_user(username):
-            flash('Username already exists. Please choose another.', 'error')
-            return render_template('signup.html')
-
-        # Hash password before storing
-        hashed_password = generate_password_hash(password)
-
-        # Store new user with role in CSV
-        with open(USER_DB, 'a', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([name, username, hashed_password, role])
-
-        session['user'] = username
-        session['role'] = role
-        session['name'] = name
-
-        flash('Registration successful! You are now logged in.', 'success')
-
-        # Redirect based on role
-        if role == 'student':
-            return redirect(url_for('student_dashboard'))
-        elif role == 'instructor':
-            return redirect(url_for('instructor_dashboard'))
-
-    return render_template('signup.html')
-
-@app.route('/signin', methods=['GET', 'POST'])
-def signin():
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        selected_role = request.form['role']
 
         user = get_user(username)
 
         if user and check_password_hash(user['password'], password):
-            # Verify if selected role matches user's actual role
-            if user['role'] != selected_role:
-                flash('Invalid role selected. Please try again.', 'error')
-                return render_template('signin.html')
-
-            # Set session variables
             session['user'] = username
-            session['role'] = selected_role
+            session['role'] = user['role']
             session['name'] = user['name']
 
             flash('You have been logged in successfully.', 'success')
 
             # Redirect based on role
-            if selected_role == 'student':
-                return redirect(url_for('student_dashboard'))
-            elif selected_role == 'instructor':
+            if user['role'] == 'instructor':
                 return redirect(url_for('instructor_dashboard'))
+            elif user['role'] == 'admin':
+                return redirect(url_for('admin_dashboard'))
         else:
             flash('Invalid credentials. Please try again.', 'error')
-            return render_template('signin.html')
+            return render_template('login.html')
 
-    return render_template('signin.html')
+    return render_template('login.html')
 
-@app.route('/signout')
-def signout():
-    session.pop('user', None)
-    session.pop('role', None)
-    session.pop('name', None)
-    flash('You have been signed out successfully.', 'success')
-    return redirect(url_for('index'))
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('login'))
 
-@app.route('/student-dashboard')
-def student_dashboard():
-    if 'user' not in session or session['role'] != 'student':
-        flash('Please log in as a student.', 'error')
-        return redirect(url_for('signin'))
+@app.route('/instructor-signup', methods=['GET', 'POST'])
+def instructor_signup():
+    if request.method == 'POST':
+        name = request.form['name']
+        username = request.form['username']
+        password = request.form['password']
+        hashed_password = generate_password_hash(password)
+        role = 'instructor'
 
-    courses = get_student_courses(session['user'])
-    return render_template('student_dashboard.html', courses=courses)
+        # Check if username already exists
+        if get_user(username):
+            flash('Username already exists. Please choose another.', 'error')
+            return render_template('instructor_signup.html')
 
+        # Add user to the USER_DB
+        with open(USER_DB, 'a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([name, username, hashed_password, role])
+
+        flash('Instructor account created successfully. Please log in.', 'success')
+        return redirect(url_for('login'))
+
+    return render_template('instructor_signup.html')
 
 @app.route('/instructor-dashboard')
 def instructor_dashboard():
     if 'user' not in session or session['role'] != 'instructor':
-        flash('Please login as an instructor', 'error')
-        return redirect(url_for('signin'))
+        flash('Please log in as an instructor.', 'error')
+        return redirect(url_for('login'))
 
-    courses = get_instructor_courses(session['user'])
-    return render_template('instructor_dashboard.html', courses=courses)
+    students = get_all_students()
+    return render_template('instructor_dashboard.html', students=students)
 
-@app.route('/create-course', methods=['GET', 'POST'])
-def create_course():
-    if 'user' not in session or session['role'] != 'instructor':
-        flash('Please login as an instructor', 'error')
-        return redirect(url_for('signin'))
+@app.route('/students')
+def students():
+    if 'user' not in session or session['role'] not in ['instructor', 'admin']:
+        flash('Please log in.', 'error')
+        return redirect(url_for('login'))
+
+    students = get_all_students()
+    return render_template('students.html', students=students)
+
+@app.route('/add-student', methods=['GET', 'POST'])
+def add_student():
+    if 'user' not in session or session['role'] not in ['instructor', 'admin']:
+        flash('Please log in.', 'error')
+        return redirect(url_for('login'))
 
     if request.method == 'POST':
-        title = request.form['title']
-        description = request.form['description']
-        course_id = str(uuid.uuid4())
+        student_id = str(uuid.uuid4())
+        name = request.form['name']
+        date_of_birth = request.form['date_of_birth']
+        gender = request.form['gender']
+        enrollment_date = datetime.now().strftime('%Y-%m-%d')
+        additional_info = request.form.get('additional_info', '')
+        grade_level = request.form['grade_level']
 
-        with open(COURSE_DB, 'a', newline='') as f:
+        with open(STUDENT_DB, 'a', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow([course_id, session['user'], title, description])
+            writer.writerow([student_id, name, date_of_birth, gender, enrollment_date, additional_info, grade_level])
 
-        flash('Course created successfully!', 'success')
-        return redirect(url_for('instructor_dashboard'))
+        flash('Student added successfully!', 'success')
+        return redirect(url_for('students'))
 
-    return render_template('create_course.html')
+    return render_template('add_student.html')
 
-@app.route('/edit-course/<course_id>', methods=['GET', 'POST'])
-def edit_course(course_id):
+@app.route('/assess-student/<student_id>', methods=['GET', 'POST'])
+def assess_student(student_id):
     if 'user' not in session or session['role'] != 'instructor':
-        flash('Please login as an instructor', 'error')
-        return redirect(url_for('signin'))
+        flash('Please log in as an instructor.', 'error')
+        return redirect(url_for('login'))
 
-    course = None
-    with open(COURSE_DB, 'r', newline='') as f:
-        reader = csv.DictReader(f)
-        courses = list(reader)
-
-    for c in courses:
-        if c['course_id'] == course_id and c['instructor_username'] == session['user']:
-            course = c
-            break
-
-    if not course:
-        flash('Course not found or unauthorized access', 'error')
-        return redirect(url_for('instructor_dashboard'))
+    student = get_student(student_id)
 
     if request.method == 'POST':
-        course['title'] = request.form['title']
-        course['description'] = request.form['description']
+        new_grade_level = request.form['grade_level']
 
-        with open(COURSE_DB, 'w', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=['course_id', 'instructor_username', 'title', 'description'])
-            writer.writeheader()
-            writer.writerows(courses)
-
-        flash('Course updated successfully!', 'success')
-        return redirect(url_for('instructor_dashboard'))
-
-    return render_template('edit_course.html', course=course)
-
-@app.route('/delete-course/<course_id>', methods=['POST'])
-def delete_course(course_id):
-    if 'user' not in session or session['role'] != 'instructor':
-        flash('Please login as an instructor', 'error')
-        return redirect(url_for('signin'))
-
-    with open(COURSE_DB, 'r', newline='') as f:
-        reader = csv.DictReader(f)
-        courses = list(reader)
-
-    courses = [c for c in courses if not (c['course_id'] == course_id and c['instructor_username'] == session['user'])]
-
-    with open(COURSE_DB, 'w', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=['course_id', 'instructor_username', 'title', 'description'])
-        writer.writeheader()
-        writer.writerows(courses)
-
-    flash('Course deleted successfully!', 'success')
-    return redirect(url_for('instructor_dashboard'))
-
-@app.route('/course-students/<course_id>')
-def course_students(course_id):
-    if 'user' not in session or session['role'] != 'instructor':
-        flash('Please login as an instructor', 'error')
-        return redirect(url_for('signin'))
-
-    students = get_enrolled_students(course_id)
-    return render_template('course_students.html', students=students, course_id=course_id)
-
-@app.route('/enroll-student/<course_id>', methods=['GET', 'POST'])
-def enroll_student(course_id):
-    if 'user' not in session or session['role'] != 'instructor':
-        flash('Please login as an instructor', 'error')
-        return redirect(url_for('signin'))
-
-    if request.method == 'POST':
-        student_username = request.form['student_username']
-
-        # Check if user exists and is a student
-        student = get_user(student_username)
-        if not student or student['role'] != 'student':
-            flash('Student not found', 'error')
-            return redirect(url_for('enroll_student', course_id=course_id))
-
-        # Enroll student
-        with open(ENROLLMENTS_DB, 'a', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([course_id, student_username])
-
-        flash('Student enrolled successfully!', 'success')
-        return redirect(url_for('course_students', course_id=course_id))
-
-    return render_template('enroll_student.html', course_id=course_id)
-
-@app.route('/remove-student/<course_id>/<student_username>', methods=['POST'])
-def remove_student(course_id, student_username):
-    if 'user' not in session or session['role'] != 'instructor':
-        flash('Please login as an instructor', 'error')
-        return redirect(url_for('signin'))
-
-    with open(ENROLLMENTS_DB, 'r', newline='') as f:
-        reader = csv.DictReader(f)
-        enrollments = list(reader)
-
-    enrollments = [e for e in enrollments if not (e['course_id'] == course_id and e['student_username'] == student_username)]
-
-    with open(ENROLLMENTS_DB, 'w', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=['course_id', 'student_username'])
-        writer.writeheader()
-        writer.writerows(enrollments)
-
-    flash('Student removed successfully!', 'success')
-    return redirect(url_for('course_students', course_id=course_id))
-
-@app.route('/student-progress/<course_id>')
-def student_progress(course_id):
-    if 'user' not in session or session['role'] != 'instructor':
-        flash('Please login as an instructor', 'error')
-        return redirect(url_for('signin'))
-
-    progress_data = get_student_progress(course_id)
-    return render_template('student_progress.html', progress_data=progress_data, course_id=course_id)
-
-@app.route('/mark-attendance/<course_id>', methods=['GET', 'POST'])
-def mark_attendance(course_id):
-    if 'user' not in session or session['role'] != 'instructor':
-        flash('Please login as an instructor', 'error')
-        return redirect(url_for('signin'))
-
-    students = get_enrolled_students(course_id)
-
-    if request.method == 'POST':
-        attendance_records = []
-        for student_username in students:
-            status = request.form.get(student_username)
-            attendance_records.append({
-                'course_id': course_id,
-                'session_date': datetime.now().strftime('%Y-%m-%d'),
-                'student_username': student_username,
-                'status': status
-            })
-
-        with open(ATTENDANCE_DB, 'a', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=['course_id', 'session_date', 'student_username', 'status'])
-            writer.writeheader()
-            for record in attendance_records:
-                writer.writerow(record)
-
-        flash('Attendance marked successfully!', 'success')
-        return redirect(url_for('course_students', course_id=course_id))
-
-    return render_template('mark_attendance.html', students=students, course_id=course_id)
-
-@app.route('/attendance-records/<course_id>')
-def attendance_records(course_id):
-    if 'user' not in session or session['role'] != 'instructor':
-        flash('Please login as an instructor', 'error')
-        return redirect(url_for('signin'))
-
-    attendance = get_attendance_records(course_id)
-    return render_template('attendance_records.html', attendance=attendance, course_id=course_id)
-
-@app.route('/courses')
-def courses():
-    if 'user' in session and session['role'] == 'student':
-        # Get IDs of courses the student is enrolled in
-        enrolled_courses = get_student_courses(session['user'])
-        enrolled_course_ids = [course['course_id'] for course in enrolled_courses]
-
-        # Display all courses not yet enrolled in
-        courses_list = []
-        with open(COURSE_DB, 'r', newline='') as f:
-            reader = csv.DictReader(f)
-            for course in reader:
-                if course['course_id'] not in enrolled_course_ids:
-                    courses_list.append(course)
-        return render_template('courses.html', courses=courses_list)
-    else:
-        flash('Please log in as a student to view available courses.', 'error')
-        return redirect(url_for('signin'))
-
-
-@app.route('/enroll-in-course/<course_id>', methods=['POST'])
-def enroll_in_course(course_id):
-    if 'user' not in session or session['role'] != 'student':
-        flash('Please log in as a student to enroll.', 'error')
-        return redirect(url_for('signin'))
-
-    # Check if already enrolled
-    enrolled_courses = get_student_courses(session['user'])
-    if any(course['course_id'] == course_id for course in enrolled_courses):
-        flash('You are already enrolled in this course.', 'error')
-        return redirect(url_for('courses'))
-
-    # Enroll the student
-    with open(ENROLLMENTS_DB, 'a', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow([course_id, session['user']])
-
-    flash('You have successfully enrolled in the course!', 'success')
-    return redirect(url_for('student_dashboard'))
-
-
-@app.route('/courses/<course_id>')
-def course_detail(course_id):
-    # Fetch course details
-    course = None
-    with open(COURSE_DB, 'r', newline='') as f:
-        reader = csv.DictReader(f)
-        for c in reader:
-            if c['course_id'] == course_id:
-                course = c
+        # Update student record
+        students = get_all_students()
+        for s in students:
+            if s['student_id'] == student_id:
+                s['grade_level'] = new_grade_level
                 break
 
-    if not course:
-        flash('Course not found', 'error')
-        return redirect(url_for('courses'))
+        # Write updated students back to file
+        with open(STUDENT_DB, 'w', newline='') as f:
+            fieldnames = ['student_id', 'name', 'date_of_birth', 'gender', 'enrollment_date', 'additional_info', 'grade_level']
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(students)
 
-    course_content = {
-        'title': course['title'],
-        'description': course['description'],
-        'videos': ['video1.mp4', 'video2.mp4']  # Placeholder for actual content
-    }
-    return render_template('course_detail.html', course=course_content)
+        flash('Student grade level updated successfully!', 'success')
+        return redirect(url_for('students'))
 
-@app.route('/profile')
-def profile():
-    if 'user' in session:
-        # Display user profile information
-        return render_template('profile.html', username=session['user'])
-    else:
-        return redirect(url_for('signin'))
+    return render_template('assess_student.html', student=student)
+
+@app.route('/attendance', methods=['GET', 'POST'])
+def attendance():
+    if 'user' not in session or session['role'] != 'instructor':
+        flash('Please log in as an instructor.', 'error')
+        return redirect(url_for('login'))
+
+    students = get_all_students()
+    date = datetime.now().strftime('%Y-%m-%d')
+
+    if request.method == 'POST':
+        date = request.form['date']
+        for student in students:
+            status = request.form.get(student['student_id'], 'Absent')
+            with open(ATTENDANCE_DB, 'a', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow([student['student_id'], date, status])
+
+        flash('Attendance recorded successfully!', 'success')
+        return redirect(url_for('attendance'))
+
+    return render_template('attendance.html', students=students, date=date)
+
+@app.route('/view-attendance')
+def view_attendance():
+    if 'user' not in session or session['role'] != 'instructor':
+        flash('Please log in as an instructor.', 'error')
+        return redirect(url_for('login'))
+
+    # Implement logic to view attendance records
+    return render_template('view_attendance.html')
+
+@app.route('/update-progress/<student_id>', methods=['GET', 'POST'])
+def update_progress(student_id):
+    if 'user' not in session or session['role'] != 'instructor':
+        flash('Please log in as an instructor.', 'error')
+        return redirect(url_for('login'))
+
+    student = get_student(student_id)
+    grade_level = student['grade_level']
+    modules = get_modules_by_grade(grade_level)
+    student_progress = get_student_progress(student_id)
+
+    if request.method == 'POST':
+        for module in modules:
+            status = request.form.get(module['module_id'], 'Not Started')
+            update_progress_record(student_id, module['module_id'], status)
+
+        flash('Progress updated successfully!', 'success')
+        return redirect(url_for('students'))
+
+    return render_template('update_progress.html', student=student, modules=modules, progress=student_progress)
+
+@app.route('/view-progress/<student_id>')
+def view_progress(student_id):
+    if 'user' not in session or session['role'] not in ['instructor', 'admin']:
+        flash('Please log in.', 'error')
+        return redirect(url_for('login'))
+
+    student = get_student(student_id)
+    grade_level = student['grade_level']
+    modules = get_modules_by_grade(grade_level)
+    student_progress = get_student_progress(student_id)
+
+    return render_template('view_progress.html', student=student, modules=modules, progress=student_progress)
+
+@app.route('/admin-dashboard')
+def admin_dashboard():
+    if 'user' not in session or session['role'] != 'admin':
+        flash('Please log in as an admin.', 'error')
+        return redirect(url_for('login'))
+
+    # Admin dashboard logic
+    return render_template('admin_dashboard.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

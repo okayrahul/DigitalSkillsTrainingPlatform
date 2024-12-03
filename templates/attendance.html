@@ -1,14 +1,12 @@
 {% extends "base.html" %} {% block content %}
 <div class="form-container">
-  <h2>Mark Attendance</h2>
-  <form
-    method="post"
-    action="{{ url_for('mark_attendance', course_id=course_id) }}"
-  >
+  <h2>Record Attendance for {{ date }}</h2>
+  <form method="post" action="{{ url_for('attendance') }}">
+    <input type="hidden" name="date" value="{{ date }}" />
     {% for student in students %}
     <div>
-      <label>{{ student }}</label>
-      <select name="{{ student }}">
+      <label>{{ student['name'] }}</label>
+      <select name="{{ student['student_id'] }}">
         <option value="Present">Present</option>
         <option value="Absent">Absent</option>
       </select>

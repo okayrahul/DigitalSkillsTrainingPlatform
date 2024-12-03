@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Update Progress for {{ student['name'] }} (Grade {{ student['grade_level'] }})</h2>
+    <form method="post" action="{{ url_for('update_progress', student_id=student['student_id']) }}">
+        {% for module in modules %}
+        <div>
+            <label>{{ module['subject'] }}: {{ module['name'] }}</label>
+            <select name="{{ module['module_id'] }}">
+                <option value="Not Started" {% if progress.get(module['module_id']) == 'Not Started' %}selected{% endif %}>Not Started</option>
+                <option value="In Progress" {% if progress.get(module['module_id']) == 'In Progress' %}selected{% endif %}>In Progress</option>
+                <option value="Completed" {% if progress.get(module['module_id']) == 'Completed' %}selected{% endif %}>Completed</option>
+            </select>
+        </div>
+        {% endfor %}
+        <button type="submit" class="button">Update Progress</button>
+    </form>
+</div>
+{% endblock %}

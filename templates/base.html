@@ -19,22 +19,17 @@
     <div class="navbar">
       <span style="font-weight: bold; font-size: 1.5em">UDAAN</span>
       <nav>
-        {% if 'user' in session %} {% if session['role'] == 'student' %}
-        <a href="{{ url_for('student_dashboard') }}">Dashboard</a>
-        <a href="{{ url_for('courses') }}">Available Courses</a>
-        {% elif session['role'] == 'instructor' %}
+        {% if 'user' in session %} {% if session['role'] == 'instructor' %}
         <a href="{{ url_for('instructor_dashboard') }}">Dashboard</a>
-        {% endif %} {% else %}
-        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('students') }}">Students</a>
+        <a href="{{ url_for('attendance') }}">Attendance</a>
+        {% elif session['role'] == 'admin' %}
+        <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
         {% endif %}
-        <a href="#team">The Team</a>
-        <a href="#contact">Contact Us</a>
-        {% if 'user' in session %}
-        <a href="{{ url_for('profile') }}">Profile</a>
-        <a href="{{ url_for('signout') }}">Sign Out</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
         {% else %}
-        <a href="{{ url_for('signup') }}">Sign Up</a>
-        <a href="{{ url_for('signin') }}">Sign In</a>
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('instructor_signup') }}">Instructor Sign-Up</a>
         {% endif %}
       </nav>
     </div>
