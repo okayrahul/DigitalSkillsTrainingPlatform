@@ -22,7 +22,9 @@
         {% if 'user' in session %} {% if session['role'] == 'instructor' %}
         <a href="{{ url_for('instructor_dashboard') }}">Dashboard</a>
         <a href="{{ url_for('students') }}">Students</a>
-        <a href="{{ url_for('attendance') }}">Attendance</a>
+
+        <a href="{{ url_for('view_attendance') }}">Attendance</a>
+
         {% elif session['role'] == 'admin' %}
         <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
         {% endif %}

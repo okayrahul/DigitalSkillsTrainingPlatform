@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
+import pandas as pd
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -270,14 +271,6 @@ def attendance():
 
     return render_template('attendance.html', students=students, date=date)
 
-@app.route('/view-attendance')
-def view_attendance():
-    if 'user' not in session or session['role'] != 'instructor':
-        flash('Please log in as an instructor.', 'error')
-        return redirect(url_for('login'))
-
-    # Implement logic to view attendance records
-    return render_template('view_attendance.html')
 
 @app.route('/update-progress/<student_id>', methods=['GET', 'POST'])
 def update_progress(student_id):
@@ -321,6 +314,58 @@ def admin_dashboard():
 
     # Admin dashboard logic
     return render_template('admin_dashboard.html')
+
+
+@app.route('/view-attendance', methods=['GET'])
+def view_attendance():
+    if 'user' not in session or session['role'] != 'instructor':
+        flash('Please log in as an instructor.', 'error')
+        return redirect(url_for('login'))
+
+    # Load data
+    students = pd.read_csv(STUDENT_DB)
+    attendance = pd.read_csv(ATTENDANCE_DB)
+
+    # Merge and pivot attendance data
+    merged_data = pd.merge(
+        attendance,
+        students[['student_id', 'name']],
+        on='student_id',
+        how='left'
+    )
+    pivot_table = merged_data.pivot_table(
+        index='name',
+        columns='date',
+        values='status',
+        aggfunc=lambda x: '✔' if 'Present' in x.values else '✘',
+        fill_value='✘'
+    )
+    pivot_table.reset_index(inplace=True)
+
+    # Reformat date columns to day-month-year
+    formatted_columns = ['name']
+    for col in pivot_table.columns[1:]:
+        try:
+            date_obj = datetime.strptime(col, '%Y-%m-%d')
+            formatted_date = date_obj.strftime('%d-%m-%Y')
+            formatted_columns.append(formatted_date)
+        except ValueError:
+            formatted_columns.append(col)
+    pivot_table.columns = formatted_columns
+
+    # Prepare for rendering
+    attendance_table = {
+        'columns': list(pivot_table.columns),
+        'rows': pivot_table.to_dict(orient='records')
+    }
+
+    selected_date = request.args.get('date', None)
+    return render_template(
+        'view_attendance.html',
+        attendance_table=attendance_table,
+        selected_date=selected_date
+    )
+
 
 if __name__ == '__main__':
     app.run(debug=True)
