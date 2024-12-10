@@ -367,5 +367,84 @@ def view_attendance():
     )
 
 
+
+ACTIVITIES_DB = 'activities.csv'
+GRADES_DB = 'grades.csv'
+
+# Create CSV files if they don't exist for activities and grades and skip if they already exist
+if not os.path.exists(ACTIVITIES_DB):
+    create_csv_file(ACTIVITIES_DB, ['activity_id', 'activity_name', 'activity_description', 'date'])
+
+if not os.path.exists(GRADES_DB):
+    create_csv_file(GRADES_DB, ['student_id', 'activity_id', 'grade','comments'])    
+
+
+@app.route('/activities', methods=['GET', 'POST'])
+def activities():
+    if 'user' not in session or session['role'] != 'instructor':
+        flash('Please log in as an instructor.', 'error')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        activity_id = str(uuid.uuid4())
+        activity_name = request.form['activity_name']
+        activity_description = request.form['activity_description']
+
+        with open(ACTIVITIES_DB, 'a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([activity_id, activity_name, activity_description])
+
+        flash('Activity added successfully!', 'success')
+        return redirect(url_for('activities'))
+
+    activities = []
+    if os.path.exists(ACTIVITIES_DB):
+        with open(ACTIVITIES_DB, 'r') as f:
+            reader = csv.DictReader(f)
+            activities = list(reader)
+
+    return render_template('activities.html', activities=activities)
+
+@app.route('/assign-grades/<activity_id>', methods=['GET', 'POST'])
+def assign_grades(activity_id):
+    if 'user' not in session or session['role'] != 'instructor':
+        flash('Please log in as an instructor.', 'error')
+        return redirect(url_for('login'))
+
+    students = get_all_students()
+    
+    # Get activity details
+    activity = None
+    with open(ACTIVITIES_DB, 'r') as f:
+        reader = csv.DictReader(f)
+        for a in reader:
+            if a['activity_id'] == activity_id:
+                activity = a
+                break
+    
+    if not activity:
+        flash('Activity not found!', 'error')
+        return redirect(url_for('activities'))
+
+    # Get existing grades
+    existing_grades = {}
+    if os.path.exists(GRADES_DB):
+        with open(GRADES_DB, 'r') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row['activity_id'] == activity_id:
+                    existing_grades[row['student_id']] = {
+                        'grade': row['grade'],
+                        'comments': row.get('comments', '')
+                    }
+    
+    if existing_grades:
+        flash('Grades already exist for this activity. You can update them below.', 'info')
+
+    return render_template('assign_grades.html', 
+                         students=students, 
+                         activity=activity,
+                         existing_grades=existing_grades)
+
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,47 @@
+<!-- templates/assign_grades.html -->
+
+{% extends "base.html" %}
+{% block content %}
+<div class="form-container">
+    <h2>Assign Grades for {{ activity['activity_name'] }}</h2>
+    <p>Date: {{ activity['date'] }}</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% endwith %}
+
+    <form method="post" action="{{ url_for('assign_grades', activity_id=activity['activity_id']) }}">
+        {% for student in students %}
+        <div class="form-group">
+            <label for="grade_{{ student['student_id'] }}">{{ student['name'] }}</label>
+            <input 
+                type="text" 
+                name="grade_{{ student['student_id'] }}" 
+                id="grade_{{ student['student_id'] }}" 
+                placeholder="Enter grade/marks" 
+                value="{{ existing_grades.get(student['student_id'], {}).get('grade', '') }}"
+                required
+            >
+
+            <label for="comments_{{ student['student_id'] }}">Comments:</label>
+            <textarea 
+                name="comments_{{ student['student_id'] }}" 
+                id="comments_{{ student['student_id'] }}" 
+                placeholder="Enter comments"
+            >{{ existing_grades.get(student['student_id'], {}).get('comments', '') }}</textarea>
+            
+            {% if student['student_id'] in existing_grades %}
+            <span class="grade-status">Previously graded</span>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="button">
+            {% if existing_grades %}
+            Update Grades
+            {% else %}
+            Submit Grades
+            {% endif %}
+        </button>
+    </form>
+</div>
+{% endblock %}

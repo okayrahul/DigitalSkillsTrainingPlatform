@@ -20,6 +20,7 @@ html, body {
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     z-index: 1000;
+    margin-bottom: 10px; /* Adjust this value as needed */
 }
 
 .navbar span {
@@ -74,6 +75,7 @@ html, body {
     background-color: #ffffff;
     padding: 30px;
     border-radius: 8px;
+    margin-top: 0;
 }
 
 .form-container h2 {
@@ -86,6 +88,8 @@ html, body {
     margin-bottom: 8px;
     color: #222123;
     font-weight: bold;
+    margin-top: 10px; /* Consistent spacing between form elements */
+    margin-bottom: 10px;
 }
 
 .form-container input[type="text"],
@@ -98,6 +102,8 @@ html, body {
     border: 1px solid #cccccc;
     border-radius: 5px;
     font-size: 1em;
+    margin-top: 10px; /* Consistent spacing between form elements */
+    margin-bottom: 10px;
 }
 
 .form-container textarea {
@@ -109,12 +115,23 @@ html, body {
     width: 100%;
 }
 
+.form-container label:first-of-type {
+    margin-top: 0; /* Remove extra space before the first label */
+}
+
 /* Content Container */
 .content-container {
     max-width: 1000px;
     margin: 100px auto;
     padding: 20px;
     color: #222123;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.content-container h1 {
+    margin-top: 0;
+    margin-bottom: 20px; /* Adjust this value as needed */
 }
 
 /* Tables */
@@ -265,4 +282,54 @@ th {
 .table-responsive table th,
 .table-responsive table td {
     white-space: nowrap;
+}
+
+
+
+/* grade assigment */
+.flash-message {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.flash-message.info {
+    background-color: #26B67C;
+    color: #ffffff;
+}
+
+.grade-status {
+    display: inline-block;
+    font-size: 0.8em;
+    color: #666;
+    font-style: italic;
+    margin-left: 10px;
+}
+
+.form-group {
+    position: relative;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-group textarea {
+    min-height: 60px;
+    resize: vertical;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
 }
