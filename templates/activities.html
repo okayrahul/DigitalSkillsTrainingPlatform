@@ -1,60 +1,65 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="content-container">
-    <h1>Activities</h1>
+  <h1>Activities</h1>
+  <form
+    method="post"
+    action="{{ url_for('activities') }}"
+    class="form-container"
+  >
+    <label for="activity_name">Activity Name:</label>
+    <input type="text" name="activity_name" id="activity_name" required />
+    <label for="activity_description">Description:</label>
+    <textarea
+      name="activity_description"
+      id="activity_description"
+      required
+    ></textarea>
+    <label for="grade_level">Grade Level:</label>
+    <select name="grade_level" id="grade_level" required>
+      <option value="1">Grade 1</option>
+      <option value="2">Grade 2</option>
+      <option value="3">Grade 3</option>
+      <option value="4">Grade 4</option>
+      <option value="5">Grade 5</option>
+    </select>
+    <label for="activity_date">Date:</label>
+    <input type="date" name="activity_date" id="activity_date" required />
+    <button type="submit" class="button">Add Activity</button>
+  </form>
 
-    <form method="post" action="{{ url_for('activities') }}" class="form-container">
-        <label for="activity_name">Activity Name:</label>
-        <input type="text" name="activity_name" id="activity_name" required>
-
-        <label for="activity_description">Description:</label>
-        <textarea name="activity_description" id="activity_description" required></textarea>
-
-        <label for="grade_level">Grade Level:</label>
-        <select name="grade_level" id="grade_level" required>
-        <option value="1">Grade 1</option>
-        <option value="2">Grade 2</option>
-        <option value="3">Grade 3</option>
-        <option value="4">Grade 4</option>
-        <option value="5">Grade 5</option>
-        </select>
-
-        <label for="activity_date">Date:</label>
-        <input type="date" name="activity_date" id="activity_date" required>
-
-        <button type="submit" class="button">Add Activity</button>
-    </form>
-
-    <h3>Existing Activities</h3>
-    {% if activities %}
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Date</th>
-                    <th>Grade Level</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for activity in activities %}
-                <tr>
-                    <td>{{ activity['activity_name'] }}</td>
-                    <td>{{ activity['activity_description'] }}</td>
-                    <td>{{ activity['date'] }}</td>
-                    <td>{{ activity['grade_level'] }}</td>
-                    <td>
-                        <a href="{{ url_for('assign_grades', activity_id=activity['activity_id'], grade_level=activity['grade_level']) }}">Assign Grades</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% else %}
-    <p>No activities found.</p>
-    {% endif %}
+  <h3>Existing Activities</h3>
+  {% if activities %}
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Grade Level</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for activity in activities %}
+        <tr>
+          <td>{{ activity['activity_name'] }}</td>
+          <td>{{ activity['activity_description'] }}</td>
+          <td>{{ activity['date'] }}</td>
+          <td>{{ activity['grade_level'] }}</td>
+          <td>
+            <a
+              href="{{ url_for('assign_grades', activity_id=activity['activity_id'], grade_level=activity['grade_level']) }}"
+              >Assign Grades</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>No activities found.</p>
+  {% endif %}
 </div>
 {% endblock %}

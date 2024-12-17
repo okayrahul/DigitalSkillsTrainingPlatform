@@ -4,17 +4,14 @@
   <form method="post" action="{{ url_for('add_student') }}">
     <label for="name">Name:</label>
     <input type="text" name="name" id="name" required />
-
     <label for="date_of_birth">Date of Birth:</label>
     <input type="date" name="date_of_birth" id="date_of_birth" required />
-
     <label for="gender">Gender:</label>
     <select name="gender" id="gender" required>
       <option value="Male">Male</option>
       <option value="Female">Female</option>
       <option value="Other">Other</option>
     </select>
-
     <label for="grade_level">Grade Level:</label>
     <select name="grade_level" id="grade_level" required>
       <option value="1">Grade 1</option>
@@ -23,10 +20,8 @@
       <option value="4">Grade 4</option>
       <option value="5">Grade 5</option>
     </select>
-
     <label for="additional_info">Additional Info:</label>
     <textarea name="additional_info" id="additional_info"></textarea>
-
     <button type="submit" class="button">Add Student</button>
   </form>
 </div>

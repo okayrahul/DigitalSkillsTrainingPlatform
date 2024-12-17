@@ -1,6 +1,5 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="dashboard-container">
+{% extends "base.html" %} {% block content %}
+<div class="dashboard-container content-container">
   <h1>Welcome, {{ session['name'] }}</h1>
 
   <div class="dashboard-actions">
@@ -10,25 +9,23 @@
   </div>
 
   <h2>Student Overview</h2>
-
-  {% if students %}
-    {% for grade_level, students_in_grade in students|sort(attribute='grade_level')|groupby('grade_level') %}
-      <h3>Grade {{ grade_level }}</h3>
-      <table>
-        <tr>
-          <th>Name</th>
-          <th>Enrollment Date</th>
-        </tr>
-        {% for student in students_in_grade %}
-        <tr>
-          <td>{{ student['name'] }}</td>
-          <td>{{ student['enrollment_date'] }}</td>
-        </tr>
-        {% endfor %}
-      </table>
+  {% if students %} {% for grade_level, students_in_grade in
+  students|sort(attribute='grade_level')|groupby('grade_level') %}
+  <h3>Grade {{ grade_level }}</h3>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Enrollment Date</th>
+    </tr>
+    {% for student in students_in_grade %}
+    <tr>
+      <td>{{ student['name'] }}</td>
+      <td>{{ student['enrollment_date'] }}</td>
+    </tr>
     {% endfor %}
-  {% else %}
-    <p>No students found.</p>
+  </table>
+  {% endfor %} {% else %}
+  <p>No students found.</p>
   {% endif %}
 </div>
 {% endblock %}

@@ -1,35 +1,31 @@
-<!-- templates/view_attendance.html -->
-
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="content-container">
-    <h2>Attendance Records</h2>
-
-    {% if attendance_table %}
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th>Student Name</th>
-                    {% for date in attendance_table['columns'][1:] %}
-                    <th>{{ date }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in attendance_table['rows'] %}
-                <tr>
-                    <td>{{ row['name'] }}</td>
-                    {% for date in attendance_table['columns'][1:] %}
-                    <td>{{ row.get(date, '✘') }}</td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% else %}
-    <p>No attendance records available to display.</p>
-    {% endif %}
+  <h2>Attendance Records</h2>
+  {% if attendance_table %}
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>Student Name</th>
+          {% for date in attendance_table['columns'][1:] %}
+          <th>{{ date }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in attendance_table['rows'] %}
+        <tr>
+          <td>{{ row['name'] }}</td>
+          {% for date in attendance_table['columns'][1:] %}
+          <td>{{ row.get(date, '✘') }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>No attendance records available to display.</p>
+  {% endif %}
 </div>
 {% endblock %}

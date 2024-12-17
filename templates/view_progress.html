@@ -3,6 +3,50 @@
   <h2>
     Progress for {{ student['name'] }} (Grade {{ student['grade_level'] }})
   </h2>
+
+  {% if modules and modules|length > 0 %}
+  <h3>Module Progress Overview</h3>
+  <div class="chart-container card">
+    <canvas id="moduleChart" width="200" height="200"></canvas>
+  </div>
+  {% endif %}
+
+  <h3>Attendance Records</h3>
+  {% if attendance %}
+  <table>
+    <tr>
+      <th>Date</th>
+      <th>Status</th>
+    </tr>
+    {% for date, status in attendance.items() %}
+    <tr>
+      <td>{{ date }}</td>
+      <td>{{ status }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>No attendance records found.</p>
+  {% endif %}
+
+  <h3>Activities & Performance</h3>
+  {% if activities %}
+  <div class="activity-grid">
+    {% for activity in activities %}
+    <div class="activity-card">
+      <h4>{{ activity.activity_name }}</h4>
+      <p><strong>Date:</strong> {{ activity.activity_date }}</p>
+      <p><strong>Presence:</strong> {{ activity.presence }}</p>
+      <p><strong>Grade:</strong> {{ activity.grade }}</p>
+      <p><strong>Comments:</strong> {{ activity.comments }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p>No activities found for this grade level.</p>
+  {% endif %}
+
+  <h3>Module Progress Details</h3>
   {% if modules %}
   <table>
     <tr>
@@ -15,13 +59,11 @@
     <tr>
       <td>{{ module['subject'] }}</td>
       <td>{{ module['name'] }}</td>
-      <td>{{ progress.get(module['module_id'], 'Not Started') }}</td>
       <td>
-        {% if progress.get(module['module_id']) %} {% set last_updated = 'N/A'
-        %} {% with %} {% for record in progress_records %} {% if
-        record['module_id'] == module['module_id'] %} {% set last_updated =
-        record['last_updated'] %} {% break %} {% endif %} {% endfor %} {%
-        endwith %} {{ last_updated }} {% else %} N/A {% endif %}
+        {{ progress.get(module['module_id'], {}).get('status', 'Not Started') }}
+      </td>
+      <td>
+        {{ progress.get(module['module_id'], {}).get('last_updated', 'N/A') }}
       </td>
     </tr>
     {% endfor %}
@@ -30,4 +72,43 @@
   <p>No modules found.</p>
   {% endif %}
 </div>
-{% endblock %}
+
+{% if modules and modules|length > 0 %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('moduleChart').getContext('2d');
+  const data = {
+    labels: ['Not Started', 'In Progress', 'Completed'],
+    datasets: [{
+      label: 'Module Status',
+      data: [
+        {{ status_counts['Not Started'] }},
+        {{ status_counts['In Progress'] }},
+        {{ status_counts['Completed'] }}
+      ],
+      backgroundColor: [
+        'rgba(200, 200, 200, 0.8)',
+        'rgba(255, 206, 86, 0.8)',
+        'rgba(54, 162, 235, 0.8)'
+      ],
+      borderColor: [
+        '#ccc',
+        '#ffce56',
+        '#36a2eb'
+      ],
+      borderWidth: 1
+    }]
+  };
+  const config = {
+    type: 'doughnut',
+    data: data,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom' }
+      }
+    }
+  };
+  new Chart(ctx, config);
+</script>
+{% endif %} {% endblock %}

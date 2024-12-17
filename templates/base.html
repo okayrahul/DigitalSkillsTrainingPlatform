@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UDAAN</title>
-    <!-- Include Roboto font for modern look -->
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
       rel="stylesheet"
@@ -15,18 +14,14 @@
     />
   </head>
   <body>
-    <!-- Navbar included here so it appears on all pages -->
     <div class="navbar">
-      <span style="font-weight: bold; font-size: 1.5em">UDAAN</span>
+      <span>UDAAN</span>
       <nav>
         {% if 'user' in session %} {% if session['role'] == 'instructor' %}
         <a href="{{ url_for('instructor_dashboard') }}">Dashboard</a>
         <a href="{{ url_for('students') }}">Students</a>
-
         <a href="{{ url_for('view_attendance') }}">Attendance</a>
-
         <a href="{{ url_for('resources') }}">Resources</a>
-
         {% elif session['role'] == 'admin' %}
         <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
         {% endif %}
@@ -37,8 +32,6 @@
         {% endif %}
       </nav>
     </div>
-
-    <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %}
     <div class="flash-messages">
@@ -46,9 +39,6 @@
       <div class="flash-message {{ category }}">{{ message }}</div>
       {% endfor %}
     </div>
-    {% endif %} {% endwith %}
-
-    <!-- Main content block for individual pages -->
-    {% block content %}{% endblock %}
+    {% endif %} {% endwith %} {% block content %}{% endblock %}
   </body>
 </html>
