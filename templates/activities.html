@@ -10,6 +10,15 @@
         <label for="activity_description">Description:</label>
         <textarea name="activity_description" id="activity_description" required></textarea>
 
+        <label for="grade_level">Grade Level:</label>
+        <select name="grade_level" id="grade_level" required>
+        <option value="1">Grade 1</option>
+        <option value="2">Grade 2</option>
+        <option value="3">Grade 3</option>
+        <option value="4">Grade 4</option>
+        <option value="5">Grade 5</option>
+        </select>
+
         <label for="activity_date">Date:</label>
         <input type="date" name="activity_date" id="activity_date" required>
 
@@ -25,6 +34,7 @@
                     <th>Name</th>
                     <th>Description</th>
                     <th>Date</th>
+                    <th>Grade Level</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -34,8 +44,9 @@
                     <td>{{ activity['activity_name'] }}</td>
                     <td>{{ activity['activity_description'] }}</td>
                     <td>{{ activity['date'] }}</td>
+                    <td>{{ activity['grade_level'] }}</td>
                     <td>
-                        <a href="{{ url_for('assign_grades', activity_id=activity['activity_id']) }}">Assign Grades</a>
+                        <a href="{{ url_for('assign_grades', activity_id=activity['activity_id'], grade_level=activity['grade_level']) }}">Assign Grades</a>
                     </td>
                 </tr>
                 {% endfor %}

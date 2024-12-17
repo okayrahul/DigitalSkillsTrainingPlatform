@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% block content %}
 <div class="dashboard-container">
   <h1>Welcome, {{ session['name'] }}</h1>
 
@@ -6,43 +7,28 @@
     <a href="{{ url_for('students') }}" class="button">Manage Students</a>
     <a href="{{ url_for('attendance') }}" class="button">Record Attendance</a>
     <a href="{{ url_for('activities') }}" class="button">Track Activities</a>
-
   </div>
 
-
-
   <h2>Student Overview</h2>
-  
-  {% if students %}
-  <table>
-    <tr>
-      <th>Name</th>
-      <th>Grade Level</th>
-      <th>Enrollment Date</th>
-      <th>Actions</th>
-    </tr>
-    {% for student in students %}
-    <tr>
-      <td>{{ student['name'] }}</td>
-      <td>{{ student['grade_level'] }}</td>
-      <td>{{ student['enrollment_date'] }}</td>
-      <td>
-        <a
-          href="{{ url_for('update_progress', student_id=student['student_id']) }}"
-          >Update Progress</a
-        >
-        |
-        <a
-          href="{{ url_for('view_progress', student_id=student['student_id']) }}"
-          >View Progress</a
-        >
 
-      </td>
-    </tr>
+  {% if students %}
+    {% for grade_level, students_in_grade in students|sort(attribute='grade_level')|groupby('grade_level') %}
+      <h3>Grade {{ grade_level }}</h3>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Enrollment Date</th>
+        </tr>
+        {% for student in students_in_grade %}
+        <tr>
+          <td>{{ student['name'] }}</td>
+          <td>{{ student['enrollment_date'] }}</td>
+        </tr>
+        {% endfor %}
+      </table>
     {% endfor %}
-  </table>
   {% else %}
-  <p>No students found.</p>
+    <p>No students found.</p>
   {% endif %}
 </div>
 {% endblock %}

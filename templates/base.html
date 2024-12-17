@@ -25,6 +25,8 @@
 
         <a href="{{ url_for('view_attendance') }}">Attendance</a>
 
+        <a href="{{ url_for('resources') }}">Resources</a>
+
         {% elif session['role'] == 'admin' %}
         <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
         {% endif %}

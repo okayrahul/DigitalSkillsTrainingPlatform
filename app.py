@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory
 import csv
 import os
 from datetime import datetime
@@ -8,6 +8,7 @@ import pandas as pd
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
+
 
 # File paths
 USER_DB = 'users.csv'
@@ -389,10 +390,12 @@ def activities():
         activity_id = str(uuid.uuid4())
         activity_name = request.form['activity_name']
         activity_description = request.form['activity_description']
+        activity_date = request.form['activity_date']
+        activity_grade = request.form['grade_level']
 
         with open(ACTIVITIES_DB, 'a', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow([activity_id, activity_name, activity_description])
+            writer.writerow([activity_id, activity_name, activity_description, activity_date, activity_grade])
 
         flash('Activity added successfully!', 'success')
         return redirect(url_for('activities'))
@@ -411,8 +414,51 @@ def assign_grades(activity_id):
         flash('Please log in as an instructor.', 'error')
         return redirect(url_for('login'))
 
-    students = get_all_students()
-    
+    # Handle grade submission
+    if request.method == 'POST':
+        try:
+            # Get all students' grades from form
+            new_grades = []
+            for key, value in request.form.items():
+                if key.startswith('grade_'):
+                    student_id = key.replace('grade_', '')
+                    grade = value
+                    comments = request.form.get(f'comments_{student_id}', '')
+                    
+                    new_grades.append({
+                        'activity_id': activity_id,
+                        'student_id': student_id,
+                        'grade': grade,
+                        'comments': comments,
+                        'date_assigned': datetime.now().strftime('%Y-%m-%d')
+                    })
+
+            # Read existing grades
+            existing_grades = []
+            if os.path.exists(GRADES_DB):
+                with open(GRADES_DB, 'r') as f:
+                    reader = csv.DictReader(f)
+                    existing_grades = [row for row in reader if row['activity_id'] != activity_id]
+
+            # Combine existing and new grades
+            existing_grades.extend(new_grades)
+
+            # Write all grades back to CSV
+            fieldnames = ['activity_id', 'student_id', 'grade', 'comments', 'date_assigned']
+            with open(GRADES_DB, 'w', newline='') as f:
+                writer = csv.DictWriter(f, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(existing_grades)
+
+            flash('Grades saved successfully!', 'success')
+            return redirect(url_for('activities'))
+
+        except Exception as e:
+            flash(f'Error saving grades: {str(e)}', 'error')
+            return redirect(url_for('assign_grades', activity_id=activity_id))
+
+    # Rest of your existing GET logic here...
+
     # Get activity details
     activity = None
     with open(ACTIVITIES_DB, 'r') as f:
@@ -421,30 +467,68 @@ def assign_grades(activity_id):
             if a['activity_id'] == activity_id:
                 activity = a
                 break
-    
+
     if not activity:
-        flash('Activity not found!', 'error')
+        flash('Activity not found.', 'error')
         return redirect(url_for('activities'))
 
-    # Get existing grades
+    # Get students matching activity grade level
+    all_students = get_all_students()
+    matching_students = [
+        student for student in all_students 
+        if student['grade_level'] == activity['grade_level']
+    ]
+
+    # Initialize existing grades
     existing_grades = {}
-    if os.path.exists(GRADES_DB):
-        with open(GRADES_DB, 'r') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                if row['activity_id'] == activity_id:
-                    existing_grades[row['student_id']] = {
-                        'grade': row['grade'],
-                        'comments': row.get('comments', '')
-                    }
     
+    # Get existing grades from grades.csv
+    with open(GRADES_DB, 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            if row['activity_id'] == activity_id:
+                existing_grades[row['student_id']] = {
+                    'grade': row['grade'],
+                    'comments': row.get('comments', '')
+                }
+
     if existing_grades:
         flash('Grades already exist for this activity. You can update them below.', 'info')
 
-    return render_template('assign_grades.html', 
-                         students=students, 
-                         activity=activity,
-                         existing_grades=existing_grades)
+    return render_template(
+        'assign_grades.html',
+        activity=activity,
+        students=matching_students,
+        existing_grades=existing_grades  # Pass existing_grades to template
+    )
+
+BOOKS_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/Books')
+
+@app.route('/resources')
+def resources():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    
+    # Get all PDF files from Books directory
+    pdf_files = []
+    for filename in os.listdir(BOOKS_FOLDER):
+        if filename.endswith('.pdf'):
+            pdf_files.append({
+                'filename': filename,
+                'description': filename.replace('.pdf', '').replace('_', ' ').title(),
+                'grade_level': extract_grade_level(filename)  # You can implement this helper function
+            })
+    
+    return render_template('resources.html', resources=pdf_files)
+
+def extract_grade_level(filename):
+    return filename.split('_')[1]
+
+@app.route('/download/<filename>')
+def download_resource(filename):
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    return send_from_directory(BOOKS_FOLDER, filename)
 
 if __name__ == '__main__':
     app.run(debug=True)

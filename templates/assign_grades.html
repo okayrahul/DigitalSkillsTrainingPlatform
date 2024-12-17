@@ -5,6 +5,7 @@
 <div class="form-container">
     <h2>Assign Grades for {{ activity['activity_name'] }}</h2>
     <p>Date: {{ activity['date'] }}</p>
+    <p>Grade Level: {{ activity['grade_level'] }}</p>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
 
